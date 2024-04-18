@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "Drop";
+}
+
+<html>
+<head>
+    <title>Dropdown Data Population</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-2 mb-3">
+                <label for="ddl_LocationAdminUnit" class="font-weight-bold font-size-15">Locations Admin Unit:</label>
+                <select id="ddl_LocationAdminUnit" style="width:100px;">
+                </select>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+
+            $.ajax({
+                url: 'https://localhost:44319/api/Values/Get_UNITNAME',
+                type: 'GET',
+                success: function (data) {
+
+                    var dropdown = $('#ddl_LocationAdminUnit');
+                    dropdown.empty();
+                    $.each(data, function (index, item) {
+                        dropdown.append($('<option></option>').attr('value', item).text(item));
+                    });
+                },
+                error: function (xhr, status, error) {
+
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

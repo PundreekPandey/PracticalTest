@@ -1,0 +1,74 @@
+﻿@model PracticalTest.Models.EmployeeMaster
+@{
+    ViewBag.Title = "AddEdit";
+    Layout = null;
+}
+<style>
+    .container {
+        background-color: mistyrose;
+    }
+
+    h2 {
+        text-align: center;
+    }
+</style>
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<h2>Add/Edit Employee</h2>
+@using (Html.BeginForm("Save", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(model => model.EmployeeId)
+    <div class="container">
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName)
+            @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.FirstName)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName)
+            @Html.TextBoxFor(model => model.LastName, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.LastName)
+        </div>
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.DesignationId)
+                @Html.TextBoxFor(model => model.DesignationId, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DesignationId)
+            </div>*@
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.DateOfJoining)
+                @Html.TextBoxFor(model => model.DateOfJoining, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DateOfJoining)
+            </div>*@
+        <div class="form-group">
+            @Html.LabelFor(model => model.DateOfJoining)
+            @Html.TextBoxFor(model => model.DateOfJoining, new { @class = "form-control", id = "DateOfJoining" })
+            @Html.ValidationMessageFor(model => model.DateOfJoining)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Salary)
+            @Html.TextBoxFor(model => model.Salary, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Salary)
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Photo")
+            <input type="file" name="PhotoFile" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            @Html.ActionLink("Cancel", "EmployeeList", null, new { @class = "btn btn-default" })
+        </div>
+    </div>
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script>
+    $(function () {
+        $("#DateOfJoining").datepicker();
+    });
+</script>

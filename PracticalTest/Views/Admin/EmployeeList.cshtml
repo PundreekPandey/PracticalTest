@@ -1,0 +1,377 @@
+﻿
+@model IEnumerable<PracticalTest.Models.EmployeeMaster>
+@{
+    ViewBag.Title = "EmployeeList";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Data Table</title>
+    <style>
+        body{
+            background-color:lightsteelblue;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color:antiquewhite;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+            .pagination a {
+                padding: 8px;
+                text-decoration: none;
+                border: 1px solid #ddd;
+                margin: 0 4px;
+            }
+
+        button {
+            margin: 10px;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Employee Data Table</h2>
+
+
+    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for Employee Name or Designation">
+    @Html.ActionLink("Add Employee", "AddEdit", null, new { @class = "btn btn-success" })
+
+    <table id="employeeTable" class="display">
+        <thead>
+            <tr>
+                <th>Employee NO.</th>
+                <th>Employee Photo</th>
+                <th>Employee Name</th>
+                @*<th>Designation</th>*@
+                <th>Date Of Joining</th>
+                <th>Salary(PA)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var employee in Model)
+                {
+            <tr>
+                <td>@employee.EmployeeId</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(employee.PhotoPath))
+                    {
+                        <img src="@Url.Content(employee.PhotoPath)" alt="Employee Photo" height="60" width="60" />
+                    }
+                    else
+                    {
+                        <span>No photo available</span>
+                    }
+                </td>
+                <td>@employee.FirstName @employee.LastName</td>
+                @*<td>@employee.DesignationId</td>*@
+                <td>@employee.DateOfJoining</td>
+                <td>@employee.Salary</td>
+
+                <td>
+                    @Html.ActionLink("Edit", "AddEdit", new { id = employee.EmployeeId }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Delete", "Delete", new { id = employee.EmployeeId }, new { @class = "btn btn-danger" })
+                </td>
+            </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">No records found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <button id="prevPage">Back</button>
+        <button id="nextPage">Next</button>
+    </div>
+
+    <!-- Include jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Include DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <!-- Include DataTables JavaScript -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+    <script>
+        // Initialize DataTable
+        $(document).ready(function () {
+            $('#employeeTable').DataTable();
+        });
+    </script>
+
+
+
+
+
+
+
+    @*<input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for Employee Name or Designation">
+        @Html.ActionLink("Add Employee", "AddEdit", null, new { @class = "btn btn-success" })
+
+        <table id="employeeTable">
+            <thead>
+                <tr>
+                    <th>Employee NO.</th>
+                    <th>Employee Name</th>
+                    <th>Designation</th>
+                    <th>Date Of Joining</th>
+                    <th>Salary(PA)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var employee in Model)
+                    {
+                <tr>
+                    <td>@employee.EmployeeId</td>
+                    <td>@employee.FirstName @employee.LastName</td>
+                    <td>@employee.DesignationId</td>
+                    <td>@employee.DateOfJoining</td>
+                    <td>@employee.Salary</td>
+
+                    <td>
+                        @Html.ActionLink("Edit", "AddEdit", new { id = employee.EmployeeId }, new { @class = "btn btn-primary" })
+                        @Html.ActionLink("Delete", "Delete", new { id = employee.EmployeeId }, new { @class = "btn btn-danger" })
+                    </td>
+                </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5">No records found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <button id="prevPage">Back</button>
+            <button id="nextPage">Next</button>
+        </div>*@
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var currentPage = 1;
+            var rowsPerPage = 10;
+
+            $("#nextPage").on("click", function () {
+                currentPage++;
+                showTable(currentPage);
+            });
+
+            $("#prevPage").on("click", function () {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showTable(currentPage);
+                }
+            });
+
+            function showTable(pageNumber) {
+                var startIndex = (pageNumber - 1) * rowsPerPage;
+                var endIndex = startIndex + rowsPerPage;
+
+                $("#employeeTable tbody tr").hide();
+                $("#employeeTable tbody tr").slice(startIndex, endIndex).show();
+            }
+
+            showTable(currentPage);
+        });
+
+        function searchTable() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("searchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("employeeTable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                var visible = false;
+                var tdArray = tr[i].getElementsByTagName("td");
+
+                for (var j = 1; j < tdArray.length; j++) {
+                    td = tdArray[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            visible = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (visible) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*@model IEnumerable<PracticalTest.Models.EmployeeMaster>
+    @{
+        ViewBag.Title = "EmployeeList";
+        Layout = null;
+    }
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Employee Data Table</title>
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+
+            th {
+                background-color: #f2f2f2;
+            }
+            .pagination {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+
+                .pagination a {
+                    padding: 8px;
+                    text-decoration: none;
+                    border: 1px solid #ddd;
+                    margin: 0 4px;
+                }
+
+            button {
+                margin: 10px;
+                padding: 8px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <h2>Employee Data Table</h2>
+
+        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for Employee Name">
+
+        <table id="employeeTable">
+            <thead>
+                <tr>
+                    <th>Employee NO.</th>
+                    <th>Employee Name</th>
+                    <th>Designation</th>
+                    <th>Date Of Joining</th>
+                    <th>Salary(PA)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var employee in Model)
+                    {
+                        <tr>
+                            <td>@employee.EmployeeId</td>
+                            <td>@employee.FirstName + @employee.LastName</td>
+                            <td>@employee.DesignationId</td>
+                            <td>@employee.DateOfJoining</td>
+                            <td>@employee.Salary</td>
+                        </tr>
+                    }
+                 }
+                </tbody>
+        </table>
+        <div class="pagination">
+            <a href="#">Back</a>
+            <a href="#" onclick="showTable(1)">1</a>
+            <a href="#" onclick="showTable(2)">2</a>
+            <a href="#" onclick="showTable(3)">3</a>
+            <a href="#">Next</a>
+        </div>
+
+        <script>
+            function searchTable() {
+                // Declare variables
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("searchInput");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("employeeTable");
+                tr = table.getElementsByTagName("tr");
+
+                // Loop through all table rows, and hide those that don't match the search query
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[1]; // Index 1 corresponds to Employee Name column
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+        </script>
+
+    </body>
+    </html>*@

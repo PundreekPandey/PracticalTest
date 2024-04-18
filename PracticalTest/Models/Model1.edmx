@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PracticeTestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DesignationMaster">
+          <Key>
+            <PropertyRef Name="DesignationId" />
+          </Key>
+          <Property Name="DesignationId" Type="int" Nullable="false" />
+          <Property Name="Designation" Type="varchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="EmployeeMaster">
+          <Key>
+            <PropertyRef Name="EmployeeId" />
+          </Key>
+          <Property Name="EmployeeId" Type="int" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="20" />
+          <Property Name="LastName" Type="varchar" MaxLength="20" />
+          <Property Name="DesignationId" Type="int" />
+          <Property Name="DateOfJoining" Type="date" />
+          <Property Name="Salary" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="PhotoPath" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <Association Name="FK__EmployeeM__Desig__3E52440B">
+          <End Role="DesignationMaster" Type="Self.DesignationMaster" Multiplicity="0..1" />
+          <End Role="EmployeeMaster" Type="Self.EmployeeMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DesignationMaster">
+              <PropertyRef Name="DesignationId" />
+            </Principal>
+            <Dependent Role="EmployeeMaster">
+              <PropertyRef Name="DesignationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PracticeTestModelStoreContainer">
+          <EntitySet Name="DesignationMaster" EntityType="Self.DesignationMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmployeeMaster" EntityType="Self.EmployeeMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Login" EntityType="Self.Login" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__EmployeeM__Desig__3E52440B" Association="Self.FK__EmployeeM__Desig__3E52440B">
+            <End Role="DesignationMaster" EntitySet="DesignationMaster" />
+            <End Role="EmployeeMaster" EntitySet="EmployeeMaster" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PracticeTestModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="DesignationMaster">
+          <Key>
+            <PropertyRef Name="DesignationId" />
+          </Key>
+          <Property Name="DesignationId" Type="Int32" Nullable="false" />
+          <Property Name="Designation" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="EmployeeMasters" Relationship="PracticeTestModel.FK__EmployeeM__Desig__3E52440B" FromRole="DesignationMaster" ToRole="EmployeeMaster" />
+        </EntityType>
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="PracticeTestEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DesignationMasters" EntityType="Self.DesignationMaster" />
+          <EntitySet Name="Logins" EntityType="Self.Login" />
+          <EntitySet Name="EmployeeMasters" EntityType="PracticeTestModel.EmployeeMaster" />
+          <AssociationSet Name="FK__EmployeeM__Desig__3E52440B" Association="PracticeTestModel.FK__EmployeeM__Desig__3E52440B">
+            <End Role="DesignationMaster" EntitySet="DesignationMasters" />
+            <End Role="EmployeeMaster" EntitySet="EmployeeMasters" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="EmployeeMaster">
+          <Key>
+            <PropertyRef Name="EmployeeId" />
+          </Key>
+          <Property Name="EmployeeId" Type="Int32" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DesignationId" Type="Int32" />
+          <Property Name="DateOfJoining" Type="DateTime" Precision="0" />
+          <Property Name="Salary" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="PhotoPath" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="DesignationMaster" Relationship="PracticeTestModel.FK__EmployeeM__Desig__3E52440B" FromRole="EmployeeMaster" ToRole="DesignationMaster" />
+        </EntityType>
+        <Association Name="FK__EmployeeM__Desig__3E52440B">
+          <End Type="PracticeTestModel.DesignationMaster" Role="DesignationMaster" Multiplicity="0..1" />
+          <End Type="PracticeTestModel.EmployeeMaster" Role="EmployeeMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DesignationMaster">
+              <PropertyRef Name="DesignationId" />
+            </Principal>
+            <Dependent Role="EmployeeMaster">
+              <PropertyRef Name="DesignationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PracticeTestModelStoreContainer" CdmEntityContainer="PracticeTestEntities">
+          <EntitySetMapping Name="DesignationMasters">
+            <EntityTypeMapping TypeName="PracticeTestModel.DesignationMaster">
+              <MappingFragment StoreEntitySet="DesignationMaster">
+                <ScalarProperty Name="DesignationId" ColumnName="DesignationId" />
+                <ScalarProperty Name="Designation" ColumnName="Designation" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Logins">
+            <EntityTypeMapping TypeName="PracticeTestModel.Login">
+              <MappingFragment StoreEntitySet="Login">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmployeeMasters">
+            <EntityTypeMapping TypeName="PracticeTestModel.EmployeeMaster">
+              <MappingFragment StoreEntitySet="EmployeeMaster">
+                <ScalarProperty Name="PhotoPath" ColumnName="PhotoPath" />
+                <ScalarProperty Name="Salary" ColumnName="Salary" />
+                <ScalarProperty Name="DateOfJoining" ColumnName="DateOfJoining" />
+                <ScalarProperty Name="DesignationId" ColumnName="DesignationId" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

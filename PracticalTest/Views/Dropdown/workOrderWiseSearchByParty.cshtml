@@ -1,0 +1,143 @@
+﻿
+@{
+    ViewBag.Title = "workOrderWiseSearchByParty";
+}
+
+<h2>workOrderWiseSearchByParty</h2>
+<!-- Ensure jQuery is loaded before other scripts -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<!-- jQuery UI CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet" />
+
+<!-- DataTables CSS -->
+<link href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+<!-- DataTables JavaScript -->
+<script src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#submitButton").on("click", function () {
+            $.ajaxSetup({ cache: false });
+            WorkOrderSearch();
+        });
+        $("#findWorkOrder").on("keypress", function (event) {
+            $.ajaxSetup({ cache: false });
+            if (event.which === 13) {
+                WorkOrderSearch();
+            }
+        });
+
+        function WorkOrderSearch() {
+            var Username = "SampleUser";
+            var PasswordHash = "SamplePasswordHash";
+            var base64Credentials = btoa(Username + ":" + PasswordHash);
+
+            var userId = sessionStorage.getItem('userID');
+            var workOrder = $("#findWorkOrder").val();
+
+            $.ajax({
+                type: 'GET',
+                url: "https://localhost:44319/api/Values/WorkOrderParty?Partywise=P02196&work=12262/001",
+                dataType: 'json',
+                data: {
+                    partycodes: userId,
+                    workorderno: workOrder
+                },
+                contentType: "application/json; charset=utf-8",
+                headers: {
+                    "Authorization": "Basic " + base64Credentials
+                },
+                success: function (response) {
+                    if (response && response.length > 0) {
+                        // Clear existing table rows
+                        $('#myTable tbody').empty();
+
+                        // Iterate through response data and append rows to the table
+                        $.each(response, function (index, row) {
+                            var checkboxHtml = '<input type="checkbox" class="row-checkbox">';
+                            var rowData = [
+                                checkboxHtml,
+                                row.WorkOrderNo,
+                                row.OrderDate,
+                                row.NoOfDays,
+                                row.PartyName,
+                                row.DrugDossageForm,
+                                row.CorrGenName,
+                                row.ItemStatus,
+                                row.ManufacturingStatus,
+                                row.GroupOrder
+                            ];
+                            var $tr = $('<tr>').append(rowData.map(function (cellData) {
+                                return $('<td>').html(cellData);
+                            }));
+                            $('#myTable tbody').append($tr);
+                        });
+
+                        // Attach change event handler to checkboxes
+                        $(document).on("change", "#myTable input[type='checkbox']", function () {
+                            var $checkbox = $(this);
+                            var $row = $checkbox.closest('tr');
+                            var $rowData = $row.find('td');
+
+                            // Retrieve data from the row
+                            var workOrderNo = $rowData.eq(1).text();
+                            var corrGenName = $rowData.eq(6).text();
+
+                            sessionStorage.setItem('workOrderNo', workOrderNo);
+                            sessionStorage.setItem('corrGenName', corrGenName);
+
+                            // Call functions like Designer(), RowMaterial(), etc.
+                            // These functions need to be defined elsewhere in your code.
+                            // Designer();
+                            // RowMaterial();
+                            // PackingMaterial();
+                            // Production();
+                            // Packing();
+                            // Invoice();
+                            // Payment();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Work Order Mismatch',
+                            text: 'This work order does not belong to the party.'
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.log("Error: " + error);
+                }
+            });
+        }
+    });
+
+</script>
+
+<div class="row margin">
+    <div class="col-md-6 col-sm-12" title="Find Work Order Wise">
+        <label class="labl"><b>Work Order</b></label>
+    </div>
+    <div class="col-md-6 col-sm-12">
+        <input type="text" class="inpu" id="findWorkOrder" title="Find Work Order" placeholder="Work Order Search" autocomplete="off" />
+    </div>
+</div>
+
+<table id="myTable" class="table table-bordered table-hover" style="background-color:white;">
+    <thead class="p-3 mb-2 text-black-50">
+        <tr>
+            <th>Select</th>
+            <th>Work Order No.</th>
+            <th>Order Date</th>
+            <th>No. Of Days</th>
+            <th>Party Name</th>
+            <th>Drug Dossage Form</th>
+            <th>Corr. Gen. Name</th>
+            <th>Item Status</th>
+            <th>Manufacturing Status</th>
+            <th>Group Order</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>

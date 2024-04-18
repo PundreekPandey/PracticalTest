@@ -1,0 +1,45 @@
+﻿@model PracticalTest.Models.Login
+@{
+    ViewBag.Title = "AdminLogin";
+    Layout = null;
+}
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<script src="~/Scripts/bootstrap.min.js"></script>
+<style>
+    .card-body {
+        background-image: url('../../Content/Image/240_F_625829161_I47vh6dmoFjzveCgWomq3ZLfHHm7XAa1.jpg');
+        background-color: antiquewhite;
+        background-size: cover;
+        height: 100%;
+    }
+</style>
+
+<div class="card-body container">
+    @using (Html.BeginForm("AdminLogin", "Admin", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="card">
+            <div class="form-group" title="User-Id" style="text-align:center;">
+                @Html.LabelFor(m => m.UserId) 
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Html.TextBoxFor(m => m.UserId, "", new { @class = "form-control", @placeholder = "User Id", @required = "required", autofocus = "autofocus" })
+            </div>
+
+            <br /><br />
+
+            <div class="form-group" title="Password" style="text-align:center;">
+                @Html.LabelFor(m => m.Password)
+                &nbsp;&nbsp;@Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password", @required = "required", @id = "password-field" })
+            </div>
+            <br /><br />
+            <center>
+                <div class="form-group">
+                    <input type="submit" name="submit" value="Login" style="background-color:#5c06f624; border:inset" title="Login" />
+                </div>
+            </center>
+        </div>
+    }
+</div>
+
+
+
